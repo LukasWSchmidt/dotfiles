@@ -28,6 +28,7 @@ alias ya="yazi"
 alias cd="z"
 alias ls="exa --icons --tree --level=2"
 alias cl="clear"
+alias lg="lazygit"
 
 #this did work right?
 
