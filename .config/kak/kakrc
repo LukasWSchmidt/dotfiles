@@ -1,0 +1,199 @@
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+plug "andreyorst/plug.kak" noload
+
+#yup it works, this is cool
+# themes
+plug "secondary-smiles/kakoune-themes" theme config %{
+  # colorscheme ef-frost
+  colorscheme ef-maris-dark
+}
+
+# Change clippy to cat!
+set-option global ui_options terminal_assistant=cat
+
+## highlighting
+# display line numbers
+add-highlighter global/ number-lines -hlcursor -relative -separator "  " -cursor-separator " |"
+# show matching symbols
+add-highlighter global/ show-matching
+
+set-option global tabstop 2
+set-option global indentwidth 2
+
+#Clipboard hack
+hook global RegisterModified '"' %{ nop %sh{
+  printf %s "$kak_main_reg_dquote" | pbcopy
+}}
+
+#Map space i to alt i
+map -docstring "select menu" global user i <a-i>
+
+# space c to line comment
+map -docstring "comment lines" global user c ":comment-line<ret>"
+
+#commet with control /
+# map global normal <c-/> "comment-line<ret>" 
+
+	#Paste Before
+# map global user P '!pbpaste<ret>'
+	#Paste After
+# map global user p '<a-!>pbpaste<ret>'
+  #Paste Clipboard hack
+
+  # exit insert mode with jj 
+hook global InsertChar j %{ try %{
+  exec -draft hH <a-k>jj<ret> d
+  exec <esc>
+}}
+# exit insert mode with kk 
+hook global InsertChar k %{ try %{
+  exec -draft hH <a-k>kk<ret> d
+  exec <esc>
+}}
+
+# always keep eight lines and three columns displayed around the cursor
+set-option global scrolloff 8,3
+
+# remap b to q
+map global normal q b
+# variations of b
+map global normal Q B
+map global normal <a-q> <a-b>
+map global normal <a-Q> <a-B>
+
+# unselect on <esc>
+# map global normal <esc> ";,"
+
+# comment lines
+map global normal <c-v> ":comment-line<ret>"
+
+# map l in user menu to select each line in selection
+map -docstring "select each line" global user l <a-s>
+
+# register access with space r
+map -docstring "reg access" global user r <c-r>
+
+# map -docstring "close current buffer" global user b ": db<ret>"
+map -docstring "goto previous buffer" global user n ": bp<ret>"
+map -docstring "goto next buffer" global user m ": bn<ret>"
+
+# autopairs
+plug "alexherbo2/auto-pairs.kak" config %{
+  enable-auto-pairs
+}
+
+plug "raiguard/kak-harpoon" config %{
+  map global user 1 ":harpoon-nav 1<ret>" -docstring "Harpoon file 1"
+  map global user 2 ":harpoon-nav 2<ret>" -docstring "Harpoon file 2"
+  map global user 3 ":harpoon-nav 3<ret>" -docstring "Harpoon file 3"
+  map global user 4 ":harpoon-nav 4<ret>" 
+  map global user 5 ":harpoon-nav 5<ret>" 
+  map global user 6 ":harpoon-nav 6<ret>" 
+  map global user 7 ":harpoon-nav 7<ret>" 
+  map global user 8 ":harpoon-nav 8<ret>" 
+  map global user 9 ":harpoon-nav 9<ret>" 
+
+  map global user a ":harpoon-add<ret>" -docstring "add harpoon"
+  map global user h ":harpoon-show-list<ret>" -docstring "show harpoons"
+}
+
+map global goto "b" '<esc>:prompt -buffer-completion buffer: %{ buffer %val{text} }<ret>' -docstring "buffer"
+
+plug 'delapouite/kakoune-buffers' %{
+  map global normal ^ q
+  map global normal <a-^> Q
+  map global normal q b
+  map global normal Q B
+  map global normal <a-q> <a-b>
+  map global normal <a-Q> <a-B>
+  map global normal b ': enter-buffers-mode<ret>' -docstring 'buffers'
+  map global normal B ': enter-user-mode -lock buffers<ret>' -docstring 'buffers (lock)'
+}
+
+# fzf
+plug "andreyorst/fzf.kak" config %{
+  require-module fzf
+  require-module fzf-grep
+  require-module fzf-file
+} defer fzf %{
+  # set-option global fzf_highlight_command "bat -r {}"
+  set-option global fzf_highlight_command "bat -n --color=always --line-range :500 {}"
+} defer fzf-file %{
+  set-option global fzf_file_command "fd . --no-ignore-vcs"
+} defer fzf-grep %{
+  set-option global fzf_grep_command "fd"
+}
+
+map -docstring "open fzf" global user f ": fzf-mode<ret>"
+
+plug "evanrelf/byline.kak" config %{
+  require-module "byline"
+}
+
+# eval %sh{kak-lsp --kakoune -s $kak_session}
+#   lsp-enable
+
+plug "kak-lsp/kak-lsp" do %{
+  cargo install --locked --force --path .
+  # optional: if you want to use specific language servers
+  # mkdir -p ~/.config/kak-lsp
+  # cp -n kak-lsp.toml ~/.config/kak-lsp/
+}
+
+hook global WinSetOption filetype=(rust|c) %{
+  lsp-enable-window
+  lsp-inlay-diagnostics-enable global
+}
+
+## enable syntax highlighting for each lang
+# c
+hook global WinSetOption filetype=c %{
+  hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
+  hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
+  hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
+  hook -once -always window WinSetOption filetype=.* %{
+    remove-hooks window semantic-tokens
+  }
+}
+
+# rust
+hook global WinSetOption filetype=rust %{
+  hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
+  hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
+  hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
+  hook -once -always window WinSetOption filetype=.* %{
+    remove-hooks window semantic-tokens
+  }
+}
+
+# tab to move in autocomplete
+hook global InsertCompletionShow .* %{
+    try %{
+        # this command temporarily removes cursors preceded by whitespace;
+        # if there are no cursors left, it raises an error, does not
+        # continue to execute the mapping commands, and the error is eaten
+        # by the `try` command so no warning appears.
+        execute-keys -draft 'h<a-K>\h<ret>'
+        map window insert <tab> <c-n>
+        map window insert <s-tab> <c-p>
+        hook -once -always window InsertCompletionHide .* %{
+            unmap window insert <tab> <c-n>
+            unmap window insert <s-tab> <c-p>
+        }
+    }
+}
+
+# Switch cursor color in insert mode
+set-face global InsertCursor default,green+B
+
+hook global ModeChange .*:.*:insert %{
+    set-face window PrimaryCursor InsertCursor
+    set-face window PrimaryCursorEol InsertCursor
+}
+
+hook global ModeChange .*:insert:.* %{ try %{
+    unset-face window PrimaryCursor
+    unset-face window PrimaryCursorEol
+}
+
+}

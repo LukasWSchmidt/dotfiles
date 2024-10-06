@@ -1,0 +1,30 @@
+try %{ 
+
+  map global user 1 ":harpoon-nav 1<ret>" -docstring "Harpoon file 1"
+  map global user 2 ":harpoon-nav 2<ret>" -docstring "Harpoon file 2"
+  map global user 3 ":harpoon-nav 3<ret>" -docstring "Harpoon file 3"
+  map global user 4 ":harpoon-nav 4<ret>" 
+  map global user 5 ":harpoon-nav 5<ret>" 
+  map global user 6 ":harpoon-nav 6<ret>" 
+  map global user 7 ":harpoon-nav 7<ret>" 
+  map global user 8 ":harpoon-nav 8<ret>" 
+  map global user 9 ":harpoon-nav 9<ret>" 
+
+  map global user a ":harpoon-add<ret>" -docstring "add harpoon"
+  map global user h ":harpoon-show-list<ret>" -docstring "show harpoons"
+ } catch %{
+    echo -debug "Error while evaluating 'kak-harpoon' configuration: %val{error}"
+
+    set-option -add current plug_conf_errors "Error while evaluating 'kak-harpoon' configuration:"
+    set-option -add current plug_conf_errors %sh{ printf "\n    " }
+    set-option -add current plug_conf_errors %val{error}
+    set-option -add current plug_conf_errors %sh{ printf "\n\n" }
+
+    hook -once -group plug-conf-err global WinDisplay .* %{
+        info -style modal -title "plug.kak error" "%opt{plug_conf_errors}"
+        on-key %{
+            info -style modal
+            execute-keys -with-maps -with-hooks %val{key}
+        }
+    }
+}
