@@ -1,6 +1,8 @@
 if status is-interactive
 
-set -gx PATH /usr/local/bin /opt/homebrew/bin/ $PATH
+set -gx PATH /usr/local/bin /opt/homebrew/bin/ /run/current-system/sw/bin/kak $PATH
+set -gx EDITOR kak
+set -gx VISIAL kak
 set -Ux EDITOR kak
 
 set -g fish_greeting
@@ -25,10 +27,11 @@ end
 #Aliases
 alias k="kak"
 alias ya="yazi"
-alias cd="z"
+#alias cd="z"
 alias ls="exa --icons --tree --level=2"
 alias cl="clear"
 alias lg="lazygit"
+alias nixrebuild="sudo -i nixos-rebuild switch --upgrade"
 
 #this did work right?
 
@@ -44,6 +47,6 @@ set -e fish_color_quote
 # Commands to run in interactive sessions can go here
 end
 
-thefuck --alias | source
+#thefuck --alias | source
 #needs to be at the end
-zoxide init fish | source
+#zoxide init fish | source
