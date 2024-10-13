@@ -1,0 +1,120 @@
+* {
+  /* `otf-font-awesome` is required to be installed for icons */
+  font-family: Material Design Icons, JetBrainsMono Nerd Font, Iosevka Nerd Font ;
+  font-size: 12px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(100, 114, 125, 0);
+  color: #ffffff;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+window#waybar.hidden {
+  opacity: 0.9;
+}
+
+#window {
+  color: #64727d;
+}
+
+#clock,
+#tray,
+#workspaces,
+
+#workspaces button {
+  margin-left: 10px;
+  margin-top: 5px;
+  color: #ffffff;
+  font-family: Meslo;
+  font-weight: Bold;
+   background-color: rgba(189, 189, 189, 0.3); /* Adjust transparency here */
+  border-radius: 6px; /* Keep buttons rounded if needed */
+}
+
+#workspaces button.active {
+  color: #ffffff;
+  font-family: Meso;
+  font-weight: bold;
+  font-size: 12px;
+ 
+  background-color: rgba(60, 63, 75, 0.3); /* Active state background */
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+  margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+  margin-right: 0;
+}
+
+#pulseaudio,
+#pulseaudio {
+  margin-top: 10px;
+  background-color: rgba(60, 63, 75, 0.3); /* Active state background */
+  border-radius: 6px; /* Keep buttons rounded if needed */
+  color: #ffffff;
+  padding-left: 9px;
+  padding-right: 12px;
+  font-size: 18px;
+}
+
+#pulseaudio.muted {
+  color: #fb958b;
+  padding-left: 9px;
+  font-size: 18px;
+}
+
+
+#clock {
+  color: #ffffff;
+  font-family: Meslo;
+  font-weight: Bold;
+  margin-right: 10px;
+  margin-top: 10px;
+  padding: 6px;
+  font-size: 12px;
+  background-color: rgba(60, 63, 75, 0.3); /* Active state background */
+  border-radius: 6px; /* Keep buttons rounded if needed */
+}
+
+tooltip {
+  font-family: Meslo;
+  border-radius: 15px;
+  padding: 15px;
+  background-color: rgba(60, 63, 75, 0.8); /* Active state background */
+}
+
+tooltip label {
+  font-family: Meslo;
+  padding: 5px;
+}
+
+label:focus {
+  background-color: #1f232b;
+}
+
+#tray {
+  margin-right: 8px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  font-size: 30px;
+
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
+}
+

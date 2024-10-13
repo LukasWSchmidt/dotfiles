@@ -31,7 +31,12 @@ hook global RegisterModified '"' %{ nop %sh{
   printf %s "$kak_main_reg_dquote" | pbcopy
 }}
 
-#Map space i to alt i
+#Possible work around for HRM
+map global normal <c-n> j
+map global normal <c-m> k
+
+
+  #Map space i to alt i
 map -docstring "select menu" global user i <a-i>
 
 # space c to line comment

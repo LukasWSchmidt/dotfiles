@@ -1,0 +1,61 @@
+{
+		"height": "10px",
+    "layer": "top", // Waybar at top layer
+    "modules-left": ["hyprland/workspaces"],
+    "modules-right": ["tray","pulseaudio","clock"],
+    "hyprland/workspaces": {
+      "format": "{name}",
+      "all-outputs": true,
+      "on-click": "activate",
+      "format-icons": {
+        "active": " 󱎴",
+        "default": "󰍹"
+      },
+      "persistent-workspaces": {
+      "1": []
+      }
+    },
+    "hyprland/window": {
+    "max-length": 200,
+    "separate-outputs": true
+    },
+    "tray": {
+        "spacing": 10
+    },
+    "clock": {
+        "format": "{:%I:%M%p}",
+        "format-alt": "{:%b %d %Y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-muted": "󰖁",
+        "format-icons": {
+            "default": ["", "", "󰕾"]
+        },
+        "on-click": "pamixer -t",
+        "on-scroll-up": "pamixer -i 1",
+        "on-scroll-down": "pamixer -d 1",
+	"on-click-right": "exec pavucontrol",
+        "tooltip-format" : "Volume {volume}%"
+    },
+    },   
+   "custom/lock": {
+       "tooltip" : false,
+       "on-click": "swaylock",
+       "format" : ""
+    },
+    
+    "custom/power-menu": {
+        "format": "{percentage}Hz",
+        "on-click": "~/.config/hypr/scripts/screenHz.sh",
+        "return-type":"json",
+        "exec": "cat ~/.config/hypr/scripts/hz.json",
+        "interval":1,
+        "tooltip": false
+    }, 
+    "custom/wallpaper": {
+       "format": "󰸉",
+       "on-click": "bash ~/.config/waybar/scripts/changewallpaper.sh"
+    }
+   }

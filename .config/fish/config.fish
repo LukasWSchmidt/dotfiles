@@ -25,13 +25,14 @@ function y
 end
 
 #Aliases
+alias flakerebuild="sudo nixos-rebuild switch --flake ~/nixos-config/ --impure"
 alias k="kak"
-alias ya="yazi"
 #alias cd="z"
 alias ls="exa --icons --tree --level=2"
 alias cl="clear"
 alias lg="lazygit"
-alias nixrebuild="sudo -i nixos-rebuild switch --upgrade"
+#alias nixrebuild="sudo -i nixos-rebuild switch --upgrade"
+alias po="poweroff"
 
 #this did work right?
 
